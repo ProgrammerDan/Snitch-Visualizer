@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
 
-import com.github.scuwr.snitchvisualizer.classobjects.SVConfig;
 import com.github.scuwr.snitchvisualizer.classobjects.Snitch;
 import com.github.scuwr.snitchvisualizer.handlers.SVChatHandler;
 import com.github.scuwr.snitchvisualizer.handlers.SVFileIOHandler;
@@ -38,13 +38,13 @@ public class SV {
 	
 	public static final String MODID = "scuwrsnitchvisualizer";
 	public static final String MODNAME = "Snitch Visualizer";
-	public static final String MODVERSION = "1.0.1";
+	public static final String MODVERSION = "1.1.1";
 	
 	@Instance("SV")
 	public static SV instance;
 	
 	public ArrayList<Snitch> snitchList;
-	public static SVConfig config;
+	public static SVSettings settings;
 	public static Logger logger = LogManager.getLogger("SnitchVisualizer");
 	
 	@Mod.EventHandler
@@ -52,8 +52,13 @@ public class SV {
 		logger.info("Loading: preInit");
 		instance = this;
 		this.snitchList = new ArrayList();
-		this.config = new SVConfig(true, true);
+		this.settings = new SVSettings(this);
+		SVFileIOHandler.loadSettings();
 		SVFileIOHandler.loadList();
+		
+		if(this.snitchList instanceof ArrayList){
+			logger.info("Snitch List failed to instantiate!");
+		}
 	}
 	
 	@Mod.EventHandler
